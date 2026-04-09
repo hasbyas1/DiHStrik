@@ -11,15 +11,26 @@
 }
 
 :root {
-  --amber-50: #FFFBEB;
-  --amber-100: #FEF3C7;
-  --amber-200: #FDE68A;
-  --amber-400: #FBBF24;
-  --amber-500: #F59E0B;
-  --amber-600: #D97706;
-  --amber-700: #B45309;
-  --amber-800: #92400E;
-  --amber-900: #78350F;
+  --amber-50:  #EFF6FF;
+  --amber-100: #DBEAFE; /* Background sekunder */
+  --amber-200: #BFDBFE; /* Border ringan atau aksen sekunder */
+  --amber-300: #93C5FD; /* Aksen ringan */
+  --amber-400: #60A5FA; /* Icon atau warna elemen netral */
+  --amber-500: #3B82F6; /* Warna utama (Primary) untuk Logo, Tombol, Titik Loading */
+  --amber-600: #2563EB; /* Warna tombol saat di-hover/ditekan */
+  --amber-700: #1D4ED8; /* Teks tegas atau background elemen penting */
+  --amber-800: #1E40AF; /* Teks sangat tegas/gelap */
+  --amber-900: #1E3A8A;
+
+  --amberx-50: #FFFBEB;
+  --amberx-100: #FEF3C7;
+  --amberx-200: #FDE68A;
+  --amberx-400: #FBBF24;
+  --amberx-500: #F59E0B;
+  --amberx-600: #D97706;
+  --amberx-700: #B45309;
+  --amberx-800: #92400E;
+  --amberx-900: #78350F;
 
   --slate-50:  #F8FAFC;
   --slate-100: #F1F5F9;
@@ -43,9 +54,16 @@
   --green-500: #22C55E;
   --green-700: #15803D;
 
-  --blue-50: #EFF6FF;
-  --blue-500: #3B82F6;
-  --blue-700: #1D4ED8;
+  --blue-50:  #EFF6FF;
+  --blue-100: #DBEAFE; /* Background sekunder */
+  --blue-200: #BFDBFE; /* Border ringan atau aksen sekunder */
+  --blue-300: #93C5FD; /* Aksen ringan */
+  --blue-400: #60A5FA; /* Icon atau warna elemen netral */
+  --blue-500: #3B82F6; /* Warna utama (Primary) untuk Logo, Tombol, Titik Loading */
+  --blue-600: #2563EB; /* Warna tombol saat di-hover/ditekan */
+  --blue-700: #1D4ED8; /* Teks tegas atau background elemen penting */
+  --blue-800: #1E40AF; /* Teks sangat tegas/gelap */
+  --blue-900: #1E3A8A; /* Paling gelap */
 
   --font-sans: 'Plus Jakarta Sans', sans-serif;
   --font-display: 'Space Grotesk', sans-serif;
