@@ -154,7 +154,7 @@
 .bubble p { margin: 0; }
 
 .bubble.bot {
-  background: #fff;
+  background: var(--slate-50);
   border: 1px solid var(--slate-200);
   border-bottom-left-radius: var(--radius-sm);
   box-shadow: var(--shadow-sm);
@@ -209,7 +209,7 @@
   display: flex;
   gap: 5px;
   align-items: center;
-  background: #fff;
+  background: var(--slate-50);
   border: 1px solid var(--slate-200);
   border-radius: var(--radius-lg);
   border-bottom-left-radius: var(--radius-sm);
@@ -274,9 +274,9 @@
 
 .diag-explanation {
   padding: 10px 14px;
-  color: var(--slate-600);
+  color: var(--slate-700);;
   line-height: 1.6;
-  background: #fff;
+  background: var(--slate-100);
 }
 
 .diag-steps-label {
@@ -365,4 +365,36 @@
     border-radius: 0;
   }
   .app-root { padding: 0; }
+}
+
+/* --- Styling Checkbox Gejala --- */
+.symptom-label {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  background: var(--blue-50);
+  border: 1px solid var(--blue-200);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.symptom-label span {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--slate-800); /* Gunakan slate-800 agar teks otomatis kontras */
+}
+
+.symptom-label input[type="checkbox"] {
+  margin-top: 2px;
+  cursor: inherit;
+}
+
+/* State ketika sudah dianalisis (History/Locked) */
+.symptom-label.locked {
+  cursor: not-allowed;
+  opacity: 0.55;
+  background: var(--slate-100); /* Background abu-abu netral */
+  border-color: var(--slate-200);
 }

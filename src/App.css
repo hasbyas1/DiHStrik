@@ -77,6 +77,29 @@
   --shadow-lg: 0 10px 40px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08);
 }
 
+.dark-theme {
+  /* Background menjadi gelap */
+  --slate-50:  #0F172A; /* Background utama chat */
+  --slate-100: #0B1120; /* Background luar aplikasi */
+  --slate-200: #1E293B; /* Warna border */
+  
+  /* Teks menjadi terang */
+  --slate-400: #94A3B8; /* Teks sekunder/waktu */
+  --slate-500: #CBD5E1; 
+  --slate-700: #E2E8F0; 
+  --slate-800: #F1F5F9; /* Teks utama */
+
+  /* Sesuaikan warna biru agar tidak terlalu menyilaukan di background gelap */
+  --blue-50:  #172554; /* Background tombol/checkbox di dark mode */
+  --blue-100: #1E3A8A;
+  --blue-200: #1E40AF;
+}
+
+/* Opsional: Tambahkan transisi agar perubahan warnanya halus (tidak kaku) */
+body, .chatbot-shell, .chat-input-area, .bubble {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
 html, body, #root {
   height: 100%;
   font-family: var(--font-sans);

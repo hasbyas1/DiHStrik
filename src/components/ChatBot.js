@@ -52,6 +52,7 @@ function TypingIndicator() {
 
 /* ─── Main ChatBot ─── */
 export default function ChatBot() {
+  // --- Kumpulan State ---
   const [messages, setMessages] = useState([
     buildBotMessage("Halo! Saya DiHStrik 👋\n\nSaya akan membantu mengidentifikasi masalah kelistrikan di rumah Anda \nSilahkan centang semua gejala yang sedang Anda alami di bawah ini:", true)
   ]);
@@ -59,12 +60,24 @@ export default function ChatBot() {
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [disabledMsgIds, setDisabledMsgIds] = useState(new Set()); // Untuk mengunci pesan lama
   
+  const [isDarkMode, setIsDarkMode] = useState(false); // State baru untuk Dark Mode
+
   const messagesEndRef = useRef(null);
 
+  // --- Kumpulan useEffect ---
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isTyping]);
 
+  useEffect(() => {
+    if (isDarkMode) {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
+  }, [isDarkMode]);
+
+  // --- Kumpulan Fungsi (Handler) ---
   const handleToggleSymptom = (id) => {
     setSelectedSymptoms(prev => 
       prev.includes(id) ? prev.filter(sId => sId !== id) : [...prev, id]
@@ -74,15 +87,15 @@ export default function ChatBot() {
   const handleAnalyze = (msgId) => {
     if (selectedSymptoms.length === 0) return;
     
-    // 1. Kunci pesan ini agar tidak bisa dicheck lagi
+    // Kunci pesan ini agar tidak bisa dicheck lagi
     setDisabledMsgIds(prev => new Set(prev).add(msgId));
 
-    // 2. Snapshot pilihan saat ini ke dalam objek pesan tersebut
+    // Snapshot pilihan saat ini ke dalam objek pesan tersebut
     setMessages(prev => prev.map(m => 
       m.id === msgId ? { ...m, finalSelection: [...selectedSymptoms] } : m
     ));
     
-    // 3. Ambil teks gejala untuk ditampilkan di chat user
+    // Ambil teks gejala untuk ditampilkan di chat user
     const selectedSymptomTexts = selectedSymptoms.map(id => {
       const symptomObj = SYMPTOMS.find(s => s.id === id);
       return symptomObj ? `• ${symptomObj.text}` : "";
@@ -111,6 +124,7 @@ export default function ChatBot() {
     }, 1500);
   };
 
+  // --- Render UI (Return) ---
   return (
     <div className="chatbot-shell">
       <header className="chat-header">
@@ -121,6 +135,25 @@ export default function ChatBot() {
           <span className="header-name">DiHStrik</span>
           <span className="header-status"><span className="status-dot" />Diagnosis Home Listrik - Sistem Pakar Probabilistik</span>
         </div>
+
+        {/* --- TOMBOL TOGGLE DARK MODE --- */}
+        <button 
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          style={{
+            marginLeft: 'auto', 
+            background: 'rgba(255,255,255,0.2)', 
+            border: 'none', 
+            borderRadius: '50%', 
+            width: '36px', height: '36px', 
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer', transition: '0.2s',
+            fontSize: '18px'
+          }}
+          title="Ganti Tema"
+        >
+          {isDarkMode ? '☀️' : '🌙'}
+        </button>
+        {/* --- AKHIR TOMBOL --- */}
       </header>
 
       <div className="chat-messages">
@@ -157,21 +190,14 @@ export default function ChatBot() {
                   {msg.isSymptomSelector && (
                     <div className="options-wrap" style={{marginTop: '12px'}}>
                       {SYMPTOMS.map(s => (
-                        <label key={s.id} style={{
-                          display: 'flex', gap: '8px', alignItems: 'flex-start',
-                          padding: '8px', background: 'var(--amber-50)', 
-                          border: '1px solid var(--amber-200)', borderRadius: '8px',
-                          cursor: isLocked ? 'not-allowed' : 'pointer',
-                          opacity: isLocked ? 0.7 : 1
-                        }}>
+                        <label key={s.id} className={`symptom-label ${isLocked ? 'locked' : ''}`}>
                           <input 
                             type="checkbox" 
                             checked={currentViewSelection.includes(s.id)}
                             onChange={() => !isLocked && handleToggleSymptom(s.id)}
                             disabled={isLocked}
-                            style={{marginTop: '4px'}}
                           />
-                          <span style={{fontSize: '13px', lineHeight: '1.4', color: 'var(--slate-700)'}}>{s.text}</span>
+                          <span>{s.text}</span>
                         </label>
                       ))}
                       {!isLocked && (
