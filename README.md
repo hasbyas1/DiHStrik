@@ -1,13 +1,20 @@
 # DiHStrik
 **DiHStrik - Diagnosis Home Listrik - Berbasis Sistem Pakar**<br>
-**Sistem Pakar Identifikasi Masalah Kelistrikan Rumah Tangga**
+**Sistem Pakar Identifikasi Masalah Kelistrikan Rumah Tangga** <br>
+---
+## Sistem Pakar - C6
+**152023034 | Firman Fawnia Fauzan**<br>
+**152023037 | Yosafat Napitupulu**<br>
+**152023064 | Fauzil Adhim Innaka Kunta R**<br>
+**152023071 | Chandra Kirana Irawan**<br>
+**152023072 | Muhammad Hasby As-shiddiqy**<br>
 
 ---
 
 ## Struktur Proyek
 
 ```
-elektropakar/
+DiHStrik/
 ├── public/
 │   └── index.html
 ├── src/
@@ -76,28 +83,6 @@ src/data/knowledgeBase.js
 npm run build
 ```
 Hasil build ada di folder `/build` — siap di-deploy ke server atau hosting.
-
----
-
-## Integrasi ke Backend
-
-Untuk menghubungkan ke backend sistem pakar (misal Flask/Express):
-
-Di `ChatBot.js`, ganti logika setTimeout dengan pemanggilan API:
-```js
-// Ganti ini:
-setTimeout(() => { ... }, 1200);
-
-// Dengan ini:
-const response = await fetch("http://localhost:5000/api/diagnosa", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ nodeId: opt.id }),
-});
-const data = await response.json();
-// data = { question, options } ATAU { diagnosis: true, title, steps, ... }
-setMessages((prev) => [...prev, buildBotMessage(data.question, data.options, data.diagnosis ? data : null)]);
-```
 
 ---
 
