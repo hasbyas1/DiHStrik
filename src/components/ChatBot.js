@@ -119,7 +119,7 @@ export default function ChatBot() {
         </div>
         <div className="header-info">
           <span className="header-name">DiHStrik</span>
-          <span className="header-status"><span className="status-dot" />Diagnosis Home Listrik - Berbasis Sistem Pakar Probabilistik</span>
+          <span className="header-status"><span className="status-dot" />Diagnosis Home Listrik - Sistem Pakar Probabilistik</span>
         </div>
       </header>
 
