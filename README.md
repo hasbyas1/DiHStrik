@@ -1,5 +1,5 @@
 # DiHStrik
-**DiHStrik - Diagnosis Home Listrik - Berbasis Sistem Pakar**<br>
+**Diagnosis Home Listrik - Berbasis Sistem Pakar**<br>
 **Sistem Pakar Identifikasi Masalah Kelistrikan Rumah Tangga** <br>
 ---
 ## Sistem Pakar - C6
@@ -47,7 +47,7 @@ Pastikan sudah terinstall:
 2. File → Open Folder → pilih folder `DiHStrik`
 
 ### Langkah 2 — Buka Terminal di VSCode
-- Tekan **Ctrl + ` ** (backtick) atau menu Terminal → New Terminal
+- Tekan **`Ctrl + `** (backtick) atau menu Terminal → New Terminal
 - Pergi root folder (saat ini, artinya langsung ke tahap selanjutnya saja)
 
 ### Langkah 3 — Install dependencies
@@ -73,8 +73,12 @@ src/data/knowledgeBase.js
 
 ### Menambah masalah baru di menu utama:
 ```js
-// Di INITIAL_OPTIONS, tambahkan entry baru:
-{ id: "grounding", label: "🌍 Masalah grounding/pembumian" },
+// Di HYPOTHESES tambahkan entry baru:
+{ id: "H8", name: "Kekurangan Beban Listrik", prior: 0.35 },
+
+// Di SYMPTOMS tambahkan entry baru:
+// PEH = Likelihood
+{ id: "S22", text: "Stabilizer Rusak", probs: ["PEH", "PEH", "PEH", "PEH", "PEH", "PEH", "PEH"] },
 ```
 
 ## Build untuk Production
