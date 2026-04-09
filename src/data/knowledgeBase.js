@@ -33,7 +33,6 @@ export const SYMPTOMS = [
   { id: "S16", text: "Saklar/dinding terasa hangat atau bergetar", probs: ["ST", "R", "ST", "ST", "R", "ST", "ST"] },
   { id: "S17", text: "Lampu berkedip acak tanpa sebab", probs: ["R", "R", "ST", "ST", "-", "T", "-"] },
   { id: "S18", text: "Korosi/lembap pada panel listrik", probs: ["-", "-", "ST", "ST", "ST", "T", "R"] },
-  
   { id: "S19", text: "Kabel rusak digigit tikus", probs: ["R", "ST", "ST", "-", "ST", "ST", "ST"] },
   { id: "S20", text: "Keran air logam terasa nyetrum", probs: ["-", "-", "ST", "-", "-", "-", "-"] },
   { id: "S21", text: "Listrik tersedot walau alat mati", probs: ["-", "-", "ST", "-", "-", "ST", "-"] },

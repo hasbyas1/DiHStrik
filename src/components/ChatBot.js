@@ -14,6 +14,7 @@ function buildBotMessage(text, isSymptomSelector = false, results = null) {
     text,
     isSymptomSelector,
     results,
+    finalSelection: null, // Tempat menyimpan snapshot pilihan gejala
     time: getTime(),
   };
 }
@@ -52,11 +53,11 @@ function TypingIndicator() {
 /* ─── Main ChatBot ─── */
 export default function ChatBot() {
   const [messages, setMessages] = useState([
-    buildBotMessage("Halo! Saya DiHStrik 👋\n\nSistem saya sekarang dilengkapi algoritma Naive Bayes untuk mendiagnosis masalah berdasarkan multigejala.\n\nSilakan centang semua gejala yang sedang Anda alami di bawah ini:", true)
+    buildBotMessage("Halo! Saya DiHStrik 👋\n\nSilakan centang semua gejala yang sedang Anda alami di bawah ini:", true)
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
-  const [isSelectorDisabled, setIsSelectorDisabled] = useState(false);
+  const [disabledMsgIds, setDisabledMsgIds] = useState(new Set()); // Untuk mengunci pesan lama
   
   const messagesEndRef = useRef(null);
 
@@ -70,58 +71,66 @@ export default function ChatBot() {
     );
   };
 
-  const handleAnalyze = () => {
+  const handleAnalyze = (msgId) => {
     if (selectedSymptoms.length === 0) return;
     
-    setIsSelectorDisabled(true); // Kunci checkbox agar tidak bisa diubah lagi untuk sesi ini
+    // 1. Kunci pesan ini agar tidak bisa dicheck lagi
+    setDisabledMsgIds(prev => new Set(prev).add(msgId));
+
+    // 2. Snapshot pilihan saat ini ke dalam objek pesan tersebut
+    setMessages(prev => prev.map(m => 
+      m.id === msgId ? { ...m, finalSelection: [...selectedSymptoms] } : m
+    ));
     
-    // Tampilkan pesan user berupa jumlah gejala yang dipilih
-    const userMsg = buildUserMessage(`Menganalisis ${selectedSymptoms.length} gejala terpilih...`);
-    setMessages(prev => [...prev, userMsg]);
+    // 3. Ambil teks gejala untuk ditampilkan di chat user
+    const selectedSymptomTexts = selectedSymptoms.map(id => {
+      const symptomObj = SYMPTOMS.find(s => s.id === id);
+      return symptomObj ? `• ${symptomObj.text}` : "";
+    }).join("\n");
+
+    const userMsgText = `Tolong analisis ${selectedSymptoms.length} gejala berikut:\n${selectedSymptomTexts}`;
+    setMessages(prev => [...prev, buildUserMessage(userMsgText)]);
+    
     setIsTyping(true);
 
-    // Proses Kalkulasi Teorema Bayes
     setTimeout(() => {
       setIsTyping(false);
       const diagnosisResults = calculateBayesianDiagnosis(selectedSymptoms);
-      
-      // Ambil top 3 hasil tertinggi
       const topResults = diagnosisResults.slice(0, 3).filter(r => parseFloat(r.percentage) > 0);
       
-      let replyText = "Berdasarkan analisis probabilitas Naive Bayes dari gejala yang Anda pilih, berikut adalah kemungkinan penyebab utama:\n";
+      let replyText = "Berdasarkan analisis probabilitas Naive Bayes, berikut adalah kemungkinan penyebab utama:";
       
       setMessages(prev => [
         ...prev,
         buildBotMessage(replyText, false, topResults),
-        buildBotMessage("Apakah Anda ingin melakukan diagnosis ulang dengan gejala lain?", true) // Tampilkan ulang selector baru
+        buildBotMessage("Apakah Anda ingin melakukan diagnosis ulang?", true) 
       ]);
       
-      // Reset pilihan untuk diagnosis berikutnya
+      // 4. RESET state global agar selector baru mulai dari nol
       setSelectedSymptoms([]);
-      setIsSelectorDisabled(false);
     }, 1500);
   };
 
   return (
     <div className="chatbot-shell">
-      {/* Header */}
       <header className="chat-header">
         <div className="header-icon">
           <svg viewBox="0 0 24 24" fill="none"><path d="M13 2L4.5 13.5H12L11 22L19.5 10.5H12L13 2Z" fill="#fff" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </div>
         <div className="header-info">
-          <span className="header-name">DiHStrik (Bayesian)</span>
-          <span className="header-status"><span className="status-dot" />Diagnosis Home Listrik - Berbasis Sistem Pakar</span>
+          <span className="header-name">DiHStrik</span>
+          <span className="header-status"><span className="status-dot" />Diagnosis Home Listrik - Berbasis Sistem Pakar Probabilistik</span>
         </div>
       </header>
 
-      {/* Messages */}
       <div className="chat-messages">
         <div className="date-divider">Sesi Analisis Dimulai</div>
 
         {messages.map((msg) => {
           const isBot = msg.from === "bot";
-          const lines = msg.text.split("\n").filter(Boolean);
+          const isLocked = disabledMsgIds.has(msg.id);
+          // Gunakan finalSelection jika sudah dikunci, jika belum gunakan state global
+          const currentViewSelection = isLocked ? (msg.finalSelection || []) : selectedSymptoms;
 
           return (
             <div key={msg.id} className={`msg-row ${msg.from}`}>
@@ -129,9 +138,8 @@ export default function ChatBot() {
               <div className="msg-col">
                 {isBot && <span className="sender-label">Sistem Pakar</span>}
                 <div className={`bubble ${msg.from}`}>
-                  {lines.map((line, i) => <p key={i} style={{ marginBottom: "6px" }}>{line}</p>)}
+                  {msg.text.split("\n").filter(Boolean).map((line, i) => <p key={i} style={{ marginBottom: "6px" }}>{line}</p>)}
                   
-                  {/* Render Hasil Analisis Bayesian */}
                   {msg.results && (
                     <div style={{marginTop: '10px'}}>
                       {msg.results.map((res, idx) => (
@@ -140,15 +148,12 @@ export default function ChatBot() {
                             <span className="severity-badge badge-danger">#{idx + 1}</span>
                             <span className="diag-title">{res.name}</span>
                           </div>
-                          <div className="diag-explanation">
-                            Probabilitas: <strong>{res.percentage}%</strong>
-                          </div>
+                          <div className="diag-explanation">Probabilitas: <strong>{res.percentage}%</strong></div>
                         </div>
                       ))}
                     </div>
                   )}
 
-                  {/* Render Form Gejala (Checkbox) */}
                   {msg.isSymptomSelector && (
                     <div className="options-wrap" style={{marginTop: '12px'}}>
                       {SYMPTOMS.map(s => (
@@ -156,27 +161,29 @@ export default function ChatBot() {
                           display: 'flex', gap: '8px', alignItems: 'flex-start',
                           padding: '8px', background: 'var(--amber-50)', 
                           border: '1px solid var(--amber-200)', borderRadius: '8px',
-                          cursor: isSelectorDisabled ? 'not-allowed' : 'pointer',
-                          opacity: isSelectorDisabled ? 0.6 : 1
+                          cursor: isLocked ? 'not-allowed' : 'pointer',
+                          opacity: isLocked ? 0.7 : 1
                         }}>
                           <input 
                             type="checkbox" 
-                            checked={selectedSymptoms.includes(s.id)}
-                            onChange={() => handleToggleSymptom(s.id)}
-                            disabled={isSelectorDisabled}
+                            checked={currentViewSelection.includes(s.id)}
+                            onChange={() => !isLocked && handleToggleSymptom(s.id)}
+                            disabled={isLocked}
                             style={{marginTop: '4px'}}
                           />
                           <span style={{fontSize: '13px', lineHeight: '1.4', color: 'var(--slate-700)'}}>{s.text}</span>
                         </label>
                       ))}
-                      <button 
-                        className="opt-btn" 
-                        style={{marginTop: '10px', background: 'var(--amber-500)', color: 'white', textAlign: 'center', borderColor: 'var(--amber-600)'}}
-                        onClick={handleAnalyze}
-                        disabled={selectedSymptoms.length === 0 || isSelectorDisabled}
-                      >
-                        Analisis Gejala Terpilih
-                      </button>
+                      {!isLocked && (
+                        <button 
+                          className="opt-btn" 
+                          style={{marginTop: '10px', background: 'var(--amber-500)', color: 'white', textAlign: 'center'}}
+                          onClick={() => handleAnalyze(msg.id)}
+                          disabled={selectedSymptoms.length === 0}
+                        >
+                          Analisis Gejala Terpilih
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>
