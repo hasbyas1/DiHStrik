@@ -53,7 +53,7 @@ function TypingIndicator() {
 /* ─── Main ChatBot ─── */
 export default function ChatBot() {
   const [messages, setMessages] = useState([
-    buildBotMessage("Halo! Saya DiHStrik 👋\n\nSilakan centang semua gejala yang sedang Anda alami di bawah ini:", true)
+    buildBotMessage("Halo! Saya DiHStrik 👋\n\nSaya akan membantu mengidentifikasi masalah kelistrikan di rumah Anda \nSilahkan centang semua gejala yang sedang Anda alami di bawah ini:", true)
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
