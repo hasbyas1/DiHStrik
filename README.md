@@ -1,7 +1,9 @@
 # DiHStrik
 **Diagnosis Home Listrik - Berbasis Sistem Pakar**<br>
-**Sistem Pakar Identifikasi Masalah Kelistrikan Rumah Tangga** <br>
+**Sistem Pakar Identifikasi Masalah Kelistrikan Rumah Tangga**
+
 ---
+
 ## Sistem Pakar - C6
 **152023034 | Firman Fawnia Fauzan**<br>
 **152023037 | Yosafat Napitupulu**<br>
