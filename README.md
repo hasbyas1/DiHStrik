@@ -1,5 +1,5 @@
 # DiHStrik
-**DiHStrik - Diagnosis Home Listrik - Berbasis Sistem Pakar**\n
+**DiHStrik - Diagnosis Home Listrik - Berbasis Sistem Pakar**<br>
 **Sistem Pakar Identifikasi Masalah Kelistrikan Rumah Tangga**
 
 ---
