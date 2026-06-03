@@ -130,20 +130,42 @@ function EnrichedDiagnosisCard({ result }) {
 }
 
 /* Simple card — used for manual mode top 3 and NLP "other" results */
-function SimpleResultCard({ res, rank }) {
+function SimpleResultCard({ res, rank, onHoverActive, onHoverInactive }) {
   const sevClass =
     rank === 1 ? "diagnosis-danger" : rank === 2 ? "diagnosis-warning" : "diagnosis-info";
   const badgeCls =
     rank === 1 ? "badge-danger" : rank === 2 ? "badge-warning" : "badge-info";
 
+  const handleMouseEnter = (e) => {
+    if (!res.explanation) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    onHoverActive({
+      explanation: res.explanation,
+      solutions: res.solutions,
+      rect: rect
+    });
+  };
+
   return (
-    <div className={`diagnosis-card ${sevClass}`} style={{ marginTop: 8 }}>
+    <div
+      className={`diagnosis-card simple-card ${sevClass}`}
+      style={{ marginTop: 8 }}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={onHoverInactive}
+    >
       <div className="diag-header">
         <span className={`severity-badge ${badgeCls}`}>#{rank}</span>
         <span className="diag-title">{res.name}</span>
+        
+        {/* Visual cue for hover */}
+        {res.explanation && (
+          <span className="hover-cue" title="Arahkan kursor untuk melihat detail">
+            ℹ️ Detail
+          </span>
+        )}
       </div>
       <div className="diag-explanation">
-        Probabilitas: <strong>{res.percentage}%</strong>
+        Probabilitas: <strong>{res.percentage || res.confidence}%</strong>
       </div>
     </div>
   );
@@ -166,11 +188,37 @@ export default function ChatBot() {
   const [isNlpLoading, setIsNlpLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  const [hoveredData, setHoveredData] = useState(null);
+  const [lastHoveredData, setLastHoveredData] = useState(null);
+  const shellRef = useRef(null);
+
+  const handleHoverActive = (data) => {
+    if (shellRef.current) {
+      const shellRect = shellRef.current.getBoundingClientRect();
+      const y = data.rect.top - shellRect.top + data.rect.height / 2;
+      const updated = {
+        explanation: data.explanation,
+        solutions: data.solutions,
+        y: y
+      };
+      setHoveredData(updated);
+      setLastHoveredData(updated);
+    }
+  };
+
+  const handleHoverInactive = () => {
+    setHoveredData(null);
+  };
+
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const autoScroll = useRef(true);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (autoScroll.current) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+    autoScroll.current = true;
   }, [messages, isTyping]);
 
   useEffect(() => {
@@ -245,13 +293,25 @@ export default function ChatBot() {
     ]);
 
     setIsTyping(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       setIsTyping(false);
       const diagnosisResults = calculateBayesianDiagnosis(selectedSymptoms);
-      const topResults = diagnosisResults
+      const rawTop = diagnosisResults
         .slice(0, 3)
         .filter((r) => parseFloat(r.percentage) > 0);
 
+      const topResults = await Promise.all(
+        rawTop.map(async (r) => {
+          try {
+            const det = await callDiagnosis(r.id, Number(r.percentage));
+            return { ...r, ...det };
+          } catch {
+            return r;
+          }
+        })
+      );
+
+      autoScroll.current = false;
       setMessages((prev) => [
         ...prev,
         buildBotMessage(
@@ -285,6 +345,7 @@ export default function ChatBot() {
       if (detectedSymptoms.length === 0) {
         setIsTyping(false);
         setIsNlpLoading(false);
+        autoScroll.current = false;
         setMessages((prev) => [
           ...prev,
           buildBotMessage(
@@ -314,11 +375,22 @@ export default function ChatBot() {
         confidence: detail.confidence ?? Number(topDiagnosis.percentage),
       };
 
-      const otherResults = bayesResults
-        .slice(1, 3)
-        .filter((r) => parseFloat(r.percentage) > 0);
+      const otherResults = await Promise.all(
+        bayesResults
+          .slice(1, 3)
+          .filter((r) => parseFloat(r.percentage) > 0)
+          .map(async (r) => {
+            try {
+              const det = await callDiagnosis(r.id, Number(r.percentage));
+              return { ...r, ...det };
+            } catch {
+              return r;
+            }
+          })
+      );
 
       // Step 4 — Render
+      autoScroll.current = false;
       setMessages((prev) => [
         ...prev,
         buildBotMessage(
@@ -337,6 +409,7 @@ export default function ChatBot() {
     } catch {
       setIsTyping(false);
       setIsNlpLoading(false);
+      autoScroll.current = false;
       setMessages((prev) => [
         ...prev,
         buildBotMessage(
@@ -356,7 +429,7 @@ export default function ChatBot() {
 
   /* ─── Render ─── */
   return (
-    <div className="chatbot-shell">
+    <div className="chatbot-shell" ref={shellRef}>
       {/* Header */}
       <header className="chat-header">
         <div className="header-icon">
@@ -388,7 +461,7 @@ export default function ChatBot() {
       </header>
 
       {/* Messages */}
-      <div className="chat-messages">
+      <div className="chat-messages" onScroll={handleHoverInactive}>
         <div className="date-divider">Sesi Analisis Dimulai</div>
 
         {messages.map((msg) => {
@@ -447,6 +520,8 @@ export default function ChatBot() {
                           key={res.id}
                           res={res}
                           rank={idx + 2}
+                          onHoverActive={handleHoverActive}
+                          onHoverInactive={handleHoverInactive}
                         />
                       ))}
                     </div>
@@ -456,7 +531,13 @@ export default function ChatBot() {
                   {msg.results?.length > 0 && (
                     <div style={{ marginTop: 10 }}>
                       {msg.results.map((res, idx) => (
-                        <SimpleResultCard key={res.id} res={res} rank={idx + 1} />
+                        <SimpleResultCard
+                          key={res.id}
+                          res={res}
+                          rank={idx + 1}
+                          onHoverActive={handleHoverActive}
+                          onHoverInactive={handleHoverInactive}
+                        />
                       ))}
                     </div>
                   )}
@@ -567,6 +648,26 @@ export default function ChatBot() {
           </button>
         </div>
       )}
+
+      {/* Global Hover Tooltip (displayed on top of everything, escaping container clipping) */}
+      <div
+        className={`simple-hover-content${hoveredData ? " active" : ""}`}
+        style={{
+          top: lastHoveredData ? `${lastHoveredData.y}px` : "0px",
+        }}
+      >
+        <div className="hover-exp">{lastHoveredData?.explanation}</div>
+        {lastHoveredData?.solutions?.length > 0 && (
+          <div className="hover-sol">
+            <strong>Solusi:</strong>
+            <ul>
+              {lastHoveredData.solutions.map((s, i) => (
+                <li key={i}>{s}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
