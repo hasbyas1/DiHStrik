@@ -1,0 +1,422 @@
+[
+  {
+    "id": "S01",
+    "text": "Meteran listrik turun mendadak",
+    "probs": [
+      "ST",
+      "-",
+      "S",
+      "S",
+      "R",
+      "S",
+      "ST"
+    ],
+    "keywords": [
+      "meteran turun",
+      "listrik turun",
+      "mcb turun",
+      "trip",
+      "jeglek"
+    ]
+  },
+  {
+    "id": "S02",
+    "text": "Stop kontak/saklar panas",
+    "probs": [
+      "ST",
+      "ST",
+      "T",
+      "ST",
+      "S",
+      "ST",
+      "T"
+    ],
+    "keywords": [
+      "stop kontak panas",
+      "saklar panas",
+      "colokan panas",
+      "outlet panas",
+      "panas di stop kontak"
+    ]
+  },
+  {
+    "id": "S03",
+    "text": "Peralatan listrik tercium bau hangus",
+    "probs": [
+      "-",
+      "ST",
+      "R",
+      "ST",
+      "R",
+      "ST",
+      "ST"
+    ],
+    "keywords": [
+      "bau hangus",
+      "bau terbakar",
+      "bau gosong",
+      "tercium hangus",
+      "smell burning"
+    ]
+  },
+  {
+    "id": "S04",
+    "text": "Lampu berkedip atau redup",
+    "probs": [
+      "R",
+      "R",
+      "R",
+      "ST",
+      "ST",
+      "ST",
+      "R"
+    ],
+    "keywords": [
+      "lampu berkedip",
+      "lampu redup",
+      "flicker",
+      "kedip",
+      "redup"
+    ]
+  },
+  {
+    "id": "S05",
+    "text": "Tersetrum ringan saat menyentuh casing",
+    "probs": [
+      "T",
+      "ST",
+      "ST",
+      "ST",
+      "T",
+      "T",
+      "T"
+    ],
+    "keywords": [
+      "kesetrum",
+      "tersentuh nyetrum",
+      "casing nyetrum",
+      "tingle",
+      "setrum ringan"
+    ]
+  },
+  {
+    "id": "S06",
+    "text": "Suara mendesis pada komponen listrik",
+    "probs": [
+      "R",
+      "R",
+      "T",
+      "ST",
+      "ST",
+      "ST",
+      "T"
+    ],
+    "keywords": [
+      "mendesis",
+      "desis",
+      "sizzling",
+      "buzzing",
+      "berdengung"
+    ]
+  },
+  {
+    "id": "S07",
+    "text": "Stop kontak/steker meleleh atau menghitam",
+    "probs": [
+      "T",
+      "ST",
+      "-",
+      "ST",
+      "T",
+      "ST",
+      "T"
+    ],
+    "keywords": [
+      "meleleh",
+      "menghitam",
+      "gosong",
+      "steker meleleh",
+      "stop kontak gosong"
+    ]
+  },
+  {
+    "id": "S08",
+    "text": "Kabel rusak atau terkelupas",
+    "probs": [
+      "ST",
+      "ST",
+      "T",
+      "ST",
+      "T",
+      "T",
+      "ST"
+    ],
+    "keywords": [
+      "kabel rusak",
+      "terkelupas",
+      "isolasi rusak",
+      "kabel sobek",
+      "kabel retak"
+    ]
+  },
+  {
+    "id": "S09",
+    "text": "Tagihan listrik melonjak misterius",
+    "probs": [
+      "-",
+      "-",
+      "ST",
+      "ST",
+      "-",
+      "ST",
+      "-"
+    ],
+    "keywords": [
+      "tagihan naik",
+      "listrik melonjak",
+      "tagihan melonjak",
+      "boros listrik",
+      "pemakaian tinggi"
+    ]
+  },
+  {
+    "id": "S10",
+    "text": "Alat elektronik rusak mendadak",
+    "probs": [
+      "ST",
+      "T",
+      "T",
+      "ST",
+      "T",
+      "ST",
+      "T"
+    ],
+    "keywords": [
+      "rusak mendadak",
+      "perangkat rusak",
+      "alat elektronik rusak",
+      "mati total",
+      "failed"
+    ]
+  },
+  {
+    "id": "S11",
+    "text": "Percikan api saat colok/cabut perangkat",
+    "probs": [
+      "T",
+      "ST",
+      "R",
+      "ST",
+      "-",
+      "R",
+      "ST"
+    ],
+    "keywords": [
+      "percikan",
+      "spark",
+      "api saat colok",
+      "api saat cabut",
+      "sparking"
+    ]
+  },
+  {
+    "id": "S12",
+    "text": "Bekas bakar/perubahan warna di stop kontak",
+    "probs": [
+      "ST",
+      "ST",
+      "R",
+      "ST",
+      "T",
+      "ST",
+      "ST"
+    ],
+    "keywords": [
+      "bekas bakar",
+      "perubahan warna",
+      "noda hangus",
+      "stop kontak gosong",
+      "discolored"
+    ]
+  },
+  {
+    "id": "S13",
+    "text": "Suara berdengung atau meletup",
+    "probs": [
+      "-",
+      "-",
+      "ST",
+      "T",
+      "-",
+      "ST",
+      "S"
+    ],
+    "keywords": [
+      "berdengung",
+      "meletup",
+      "buzz",
+      "letupan",
+      "pop"
+    ]
+  },
+  {
+    "id": "S14",
+    "text": "Meteran listrik langsung turun lagi setelah direset",
+    "probs": [
+      "ST",
+      "ST",
+      "T",
+      "R",
+      "-",
+      "T",
+      "T"
+    ],
+    "keywords": [
+      "turun lagi",
+      "reset tapi trip",
+      "langsung turun",
+      "mcb turun lagi",
+      "breaker trip lagi"
+    ]
+  },
+  {
+    "id": "S15",
+    "text": "Meteran listrik turun akibat perangkat tertentu",
+    "probs": [
+      "ST",
+      "T",
+      "-",
+      "-",
+      "-",
+      "ST",
+      "-"
+    ],
+    "keywords": [
+      "akibat perangkat",
+      "saat alat tertentu",
+      "setiap colok alat ini",
+      "alat tertentu membuat turun",
+      "device tertentu"
+    ]
+  },
+  {
+    "id": "S16",
+    "text": "Saklar/dinding terasa hangat atau bergetar",
+    "probs": [
+      "ST",
+      "R",
+      "ST",
+      "ST",
+      "R",
+      "ST",
+      "ST"
+    ],
+    "keywords": [
+      "saklar hangat",
+      "dinding hangat",
+      "bergetar",
+      "vibrating",
+      "panas pada dinding"
+    ]
+  },
+  {
+    "id": "S17",
+    "text": "Lampu berkedip acak tanpa sebab",
+    "probs": [
+      "R",
+      "R",
+      "ST",
+      "ST",
+      "-",
+      "T",
+      "-"
+    ],
+    "keywords": [
+      "kedip acak",
+      "berkedip acak",
+      "flicker acak",
+      "lampu kedip sendiri",
+      "tanpa sebab"
+    ]
+  },
+  {
+    "id": "S18",
+    "text": "Korosi/lembap pada panel listrik",
+    "probs": [
+      "-",
+      "-",
+      "ST",
+      "ST",
+      "ST",
+      "T",
+      "R"
+    ],
+    "keywords": [
+      "korosi",
+      "lembap",
+      "panel basah",
+      "karat",
+      "moisture"
+    ]
+  },
+  {
+    "id": "S19",
+    "text": "Kabel rusak digigit tikus",
+    "probs": [
+      "R",
+      "ST",
+      "ST",
+      "-",
+      "ST",
+      "ST",
+      "ST"
+    ],
+    "keywords": [
+      "digigit tikus",
+      "gigitan tikus",
+      "hewan menggigit kabel",
+      "rodent",
+      "kabel digigit"
+    ]
+  },
+  {
+    "id": "S20",
+    "text": "Keran air logam terasa nyetrum",
+    "probs": [
+      "-",
+      "-",
+      "ST",
+      "-",
+      "-",
+      "-",
+      "-"
+    ],
+    "keywords": [
+      "keran nyetrum",
+      "logam nyetrum",
+      "air terasa nyetrum",
+      "pipa nyetrum",
+      "metal tingling"
+    ]
+  },
+  {
+    "id": "S21",
+    "text": "Listrik tersedot walau alat mati",
+    "probs": [
+      "-",
+      "-",
+      "ST",
+      "-",
+      "-",
+      "ST",
+      "-"
+    ],
+    "keywords": [
+      "listrik tersedot",
+      "alat mati tapi listrik jalan",
+      "daya tetap tersedot",
+      "standby power",
+      "masih mengonsumsi"
+    ]
+  }
+]
