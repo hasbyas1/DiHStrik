@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.models import (
     AnalyzeRequest,
     AnalyzeResponse,
@@ -11,6 +12,13 @@ from app.services.diagnosis_service import get_diagnosis_info
 app = FastAPI(
     title="Electrical Expert NLP Service",
     version="1.0.0"
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")

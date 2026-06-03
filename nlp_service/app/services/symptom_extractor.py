@@ -1,14 +1,21 @@
 import json
 from pathlib import Path
+from Sastrawi.Stemmer.StemmerFactory import StemmerFactory
 
 DATA_DIR = Path(__file__).parent.parent / "data"
 
 with open(DATA_DIR / "symptoms.json", encoding="utf-8") as f:
     SYMPTOMS = json.load(f)
 
+# Initialize Stemmer
+factory = StemmerFactory()
+stemmer = factory.create_stemmer()
+
 def extract_symptoms(text: str):
 
     text = text.lower()
+    # Apply stemming to user input
+    stemmed_text = stemmer.stem(text)
 
     matches = []
 
@@ -18,11 +25,14 @@ def extract_symptoms(text: str):
 
         for keyword in symptom["keywords"]:
 
-            if keyword.lower() in text:
+            # Apply stemming to keyword for accurate matching
+            stemmed_keyword = stemmer.stem(keyword.lower())
+
+            if stemmed_keyword in stemmed_text:
 
                 score = 0.95
 
-                if len(keyword.split()) == 1:
+                if len(stemmed_keyword.split()) == 1:
                     score = 0.80
 
                 best_score = max(best_score, score)
