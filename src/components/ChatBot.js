@@ -4,6 +4,31 @@ import "./ChatBot.css";
 
 const NLP_URL = "http://127.0.0.1:8000";
 
+const SYMPTOM_DESCRIPTIONS = {
+  "S01": "Terjadi saat saklar utama di meteran (MCB) anjlok/jepret secara tiba-tiba, memutus seluruh aliran listrik rumah.",
+  "S02": "Permukaan colokan atau saklar terasa panas tak wajar saat disentuh, mengindikasikan kabel di dalamnya kelebihan beban atau kendor.",
+  "S03": "Ada aroma tajam seperti plastik atau karet yang terbakar dari sekitar colokan atau alat elektronik yang sedang menyala.",
+  "S04": "Cahaya lampu menjadi tidak stabil, kadang terang kadang meredup sendiri seperti kekurangan daya.",
+  "S05": "Terasa getaran atau sengatan setrum kecil/ringan saat tangan Anda menyentuh bodi logam dari alat elektronik (seperti kulkas atau CPU PC).",
+  "S06": "Terdengar suara berdesis seperti 'sssttt' halus secara terus-menerus di dekat saklar atau kotak meteran listrik.",
+  "S07": "Bentuk colokan melengkung atau ada noda hitam pekat bekas terbakar di sekitarnya karena panas berlebih.",
+  "S08": "Lapisan karet pelindung luar kabel sudah robek, pecah, atau terkelupas sehingga kawat tembaga di dalamnya terlihat.",
+  "S09": "Biaya token atau tagihan listrik bulanan tiba-tiba naik sangat drastis padahal intensitas pemakaian alat elektronik Anda biasa saja.",
+  "S10": "Alat elektronik yang tadinya normal tiba-tiba mati total dan tidak bisa dinyalakan lagi saat dicolokkan ke stop kontak.",
+  "S11": "Keluar kilatan cahaya atau percikan api kecil sesaat ketika Anda memasukkan atau mencabut colokan perangkat listrik.",
+  "S12": "Ada warna kecoklatan atau noda gosong di area sekitar lubang colokan pada dinding.",
+  "S13": "Ada bunyi dengungan konstan 'ngiing' atau suara letupan 'pop' berulang dari arah meteran atau stop kontak.",
+  "S14": "Saat Anda mencoba menaikkan kembali tuas saklar MCB yang turun, tuas tersebut langsung otomatis jatuh lagi.",
+  "S15": "Listrik di rumah mati/anjlok hanya pada saat Anda menyalakan alat tertentu saja (misalnya saat baru menyalakan AC atau pompa air).",
+  "S16": "Bagian permukaan tembok di sekitar stop kontak atau saklar terasa hangat atau sedikit bergetar bila ditempelkan tangan.",
+  "S17": "Lampu tiba-tiba mati-nyala dengan sendirinya padahal tidak ada perubahan cuaca atau alat berat yang sedang dinyalakan.",
+  "S18": "Ada bercak karat, bekas rembesan air, atau kelembapan embun di sekitar kotak sekring atau meteran listrik.",
+  "S19": "Kabel tampak terputus, cacat, atau rusak dengan bentuk terkoyak yang identik dengan bekas gigitan hewan pengerat.",
+  "S20": "Terdapat sensasi aliran listrik ringan yang mengagetkan saat Anda menyentuh keran air dari logam di kamar mandi atau tempat cuci piring.",
+  "S21": "Meteran tetap berputar cepat atau indikator pemakaian daya tetap tinggi meskipun semua alat elektronik sudah dipastikan dalam keadaan mati/dicabut."
+};
+
+
 /* ─── Helpers ─── */
 function getTime() {
   return new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" });
@@ -96,8 +121,8 @@ function EnrichedDiagnosisCard({ result }) {
     result.severity === "high"
       ? "diagnosis-danger"
       : result.severity === "medium"
-      ? "diagnosis-warning"
-      : "diagnosis-info";
+        ? "diagnosis-warning"
+        : "diagnosis-info";
 
   return (
     <div className={`diagnosis-card ${sevClass}`} style={{ marginTop: 12 }}>
@@ -156,7 +181,7 @@ function SimpleResultCard({ res, rank, onHoverActive, onHoverInactive }) {
       <div className="diag-header">
         <span className={`severity-badge ${badgeCls}`}>#{rank}</span>
         <span className="diag-title">{res.name}</span>
-        
+
         {/* Visual cue for hover */}
         {res.explanation && (
           <span className="hover-cue" title="Arahkan kursor untuk melihat detail">
@@ -575,6 +600,16 @@ export default function ChatBot() {
                         <label
                           key={s.id}
                           className={`symptom-label ${isLocked ? "locked" : ""}`}
+                          onMouseEnter={(e) => {
+                            const desc = SYMPTOM_DESCRIPTIONS[s.id];
+                            if (desc) {
+                              handleHoverActive({
+                                explanation: desc,
+                                rect: e.currentTarget.getBoundingClientRect()
+                              });
+                            }
+                          }}
+                          onMouseLeave={handleHoverInactive}
                         >
                           <input
                             type="checkbox"
