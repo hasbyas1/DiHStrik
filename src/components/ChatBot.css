@@ -453,15 +453,30 @@
 
 .mode-btn-nlp {
   border-color: var(--amber-300);
-  background: var(--amber-50);
+  background: var(--blue-50);
 }
-.mode-btn-nlp:hover { border-color: var(--amber-400); background: var(--amber-100); }
-
+.mode-btn-nlp:hover {
+  border-color: var(--amber-400);
+  background: #2563EB;
+  color: #fff;
+}
+.mode-btn-nlp:hover .mode-btn-text strong,
+.mode-btn-nlp:hover .mode-btn-text small {
+  color: #fff;
+}
 .mode-btn-manual {
   border-color: #BFDBFE;
   background: var(--blue-50);
 }
-.mode-btn-manual:hover { border-color: #93C5FD; background: #EFF6FF; }
+.mode-btn-manual:hover {
+  border-color: #93C5FD;
+  background: #2563EB;
+  color: #fff;
+}
+.mode-btn-manual:hover .mode-btn-text strong,
+.mode-btn-manual:hover .mode-btn-text small {
+  color: #fff;
+}
 
 /* ─── Detected Symptoms (NLP tags) ─── */
 .detected-symptoms-wrap {
@@ -526,4 +541,4 @@
 .bubble-error {
   border-color: #FECACA !important;
   background: #FFF5F5 !important;
-}
+}
