@@ -1,0 +1,121 @@
+{
+  "H1": {
+    "id": "H1",
+    "name": "Kelebihan Beban Listrik",
+    "severity": "medium",
+    "explanation": "Beban listrik yang dipakai kemungkinan melebihi kapasitas rangkaian atau stop kontak.",
+    "solutions": [
+      "Kurangi jumlah perangkat yang menyala bersamaan.",
+      "Jangan memakai extension cord atau multi-outlet converter untuk peralatan berat.",
+      "Colokkan peralatan utama langsung ke stop kontak dinding.",
+      "Minta teknisi listrik memeriksa rangkaian dan menambah outlet atau sirkuit bila diperlukan."
+    ],
+    "warning_signs": [
+      "MCB sering trip",
+      "lampu redup atau berkedip",
+      "outlet terasa hangat atau berubah warna"
+    ]
+  },
+  "H2": {
+    "id": "H2",
+    "name": "Korsleting",
+    "severity": "high",
+    "explanation": "Ada hubungan pendek yang membuat arus mengalir tidak normal dan pemutus arus dapat trip untuk melindungi rangkaian.",
+    "solutions": [
+      "Matikan listrik utama jika aman untuk dilakukan.",
+      "Cabut perangkat yang terhubung ke rangkaian bermasalah.",
+      "Jangan terus menyalakan ulang MCB tanpa menemukan penyebabnya.",
+      "Panggil teknisi listrik untuk memeriksa kabel, stop kontak, dan pemutus arus."
+    ],
+    "warning_signs": [
+      "pemutus arus sering trip",
+      "bau terbakar atau hangus",
+      "percikan api saat memakai perangkat"
+    ]
+  },
+  "H3": {
+    "id": "H3",
+    "name": "Kebocoran Arus Listrik ke Tanah",
+    "severity": "high",
+    "explanation": "Arus listrik diduga bocor ke jalur tanah atau bagian logam sehingga dapat memicu kejutan listrik.",
+    "solutions": [
+      "Hentikan penggunaan area atau perangkat yang terasa nyetrum.",
+      "Pastikan area lembap atau basah dilindungi dengan GFCI yang berfungsi.",
+      "Periksa kondisi grounding, isolasi kabel, dan sambungan oleh teknisi listrik.",
+      "Jika ada kejutan listrik, jangan gunakan perangkat sampai diperiksa."
+    ],
+    "warning_signs": [
+      "keran logam terasa nyetrum",
+      "tersentuh casing terasa setrum ringan",
+      "area dekat air memicu kejutan listrik"
+    ]
+  },
+  "H4": {
+    "id": "H4",
+    "name": "Sambungan Longgar / Buruk",
+    "severity": "high",
+    "explanation": "Sambungan kabel, terminal, atau konektor kemungkinan longgar sehingga menimbulkan panas, bunyi, atau percikan.",
+    "solutions": [
+      "Matikan aliran listrik sebelum memeriksa perangkat.",
+      "Jangan memakai outlet yang panas, berdengung, atau berubah warna.",
+      "Minta teknisi listrik mengencangkan atau mengganti sambungan, terminal, atau outlet yang rusak.",
+      "Ganti komponen yang meleleh, menghitam, atau mengeluarkan bau terbakar."
+    ],
+    "warning_signs": [
+      "outlet panas",
+      "berdengung atau meletup",
+      "lampu berkedip tidak stabil"
+    ]
+  },
+  "H5": {
+    "id": "H5",
+    "name": "Isolasi Kabel Rusak / Menua",
+    "severity": "high",
+    "explanation": "Lapisan pelindung kabel kemungkinan retak, terkelupas, atau aus sehingga konduktor menjadi tidak aman.",
+    "solutions": [
+      "Jangan memakai kabel yang terkelupas, retak, atau digigit hewan.",
+      "Ganti kabel atau stop kontak yang rusak dengan komponen baru.",
+      "Jauhkan kabel dari panas, sudut tajam, dan gigitan hewan.",
+      "Jika kerusakan ada di dalam dinding, minta teknisi listrik mengganti jalurnya."
+    ],
+    "warning_signs": [
+      "kabel terkelupas",
+      "kabel retak atau sobek",
+      "bekas gigitan tikus"
+    ]
+  },
+  "H6": {
+    "id": "H6",
+    "name": "Perangkat Elektronik Rusak atau Cacat",
+    "severity": "medium",
+    "explanation": "Perangkat itu sendiri kemungkinan gagal fungsi dan memicu panas, kejutan ringan, atau konsumsi listrik yang tidak normal.",
+    "solutions": [
+      "Cabut perangkat dari stop kontak dan hentikan pemakaian.",
+      "Coba periksa dengan teknisi atau servis resmi jika perangkat masih layak diperbaiki.",
+      "Ganti perangkat bila ada tanda kerusakan berat, bau hangus, atau percikan api.",
+      "Jika perangkat membuat setrum ringan, jangan dipakai sampai benar-benar aman."
+    ],
+    "warning_signs": [
+      "alat rusak mendadak",
+      "tersengat ringan saat menyentuh perangkat",
+      "alat tertentu membuat MCB turun"
+    ]
+  },
+  "H7": {
+    "id": "H7",
+    "name": "Busur Listrik",
+    "severity": "high",
+    "explanation": "Ada loncatan arus listrik melalui udara atau kontak yang tidak sempurna, yang dapat menghasilkan panas dan percikan.",
+    "solutions": [
+      "Matikan listrik dan jangan gunakan rangkaian yang menimbulkan percikan.",
+      "Minta teknisi listrik memeriksa kabel, soket, dan konektor yang longgar atau rusak.",
+      "Pertimbangkan proteksi AFCI bila instalasi dan kebutuhan rumah memang sesuai.",
+      "Ganti kabel atau perangkat yang menimbulkan percikan saat colok dan cabut."
+    ],
+    "warning_signs": [
+      "percikan saat colok atau cabut",
+      "bunyi letupan",
+      "bau hangus atau gosong"
+    ]
+  }
+}
