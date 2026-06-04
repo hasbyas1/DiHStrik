@@ -17,7 +17,7 @@ const SYMPTOM_DESCRIPTIONS = {
   "S10": "Alat elektronik yang tadinya normal tiba-tiba mati total dan tidak bisa dinyalakan lagi saat dicolokkan ke stop kontak.",
   "S11": "Keluar kilatan cahaya atau percikan api kecil sesaat ketika Anda memasukkan atau mencabut colokan perangkat listrik.",
   "S12": "Ada warna kecoklatan atau noda gosong di area sekitar lubang colokan pada dinding.",
-  "S13": "Ada bunyi dengungan konstan 'ngiing' atau suara letupan 'pop' berulang dari arah meteran atau stop kontak.",
+  "S13": "Ada bunyi dengungan konstan 'ngiing' atau suara letupan berulang dari arah meteran atau stop kontak.",
   "S14": "Saat Anda mencoba menaikkan kembali tuas saklar MCB yang turun, tuas tersebut langsung otomatis jatuh lagi.",
   "S15": "Listrik di rumah mati/anjlok hanya pada saat Anda menyalakan alat tertentu saja (misalnya saat baru menyalakan AC atau pompa air).",
   "S16": "Bagian permukaan tembok di sekitar stop kontak atau saklar terasa hangat atau sedikit bergetar bila ditempelkan tangan.",
