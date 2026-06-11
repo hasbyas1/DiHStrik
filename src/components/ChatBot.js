@@ -271,7 +271,8 @@ export default function ChatBot() {
         ...prev,
         buildUserMessage("💬 Ceritakan masalah Anda"),
         buildBotMessage(
-          "Baik! Ketik keluhan listrik Anda di bawah.\n\nContoh: \"Stop kontak saya panas dan ada bau hangus\""
+          "Baik! Ketik keluhan listrik Anda di bawah.\n\nContoh: \"Stop kontak saya panas dan ada bau hangus\"",
+          { isNlpEntry: true }
         ),
       ]);
       setTimeout(() => inputRef.current?.focus(), 150);
@@ -292,7 +293,8 @@ export default function ChatBot() {
   };
 
   /* ─── Go Back ─── */
-  const handleGoBack = () => {
+  const handleGoBack = (msgId) => {
+    lockMsgs([msgId]); // lock pesan ini, jadi hanya bisa sekali klik dan tidak bisa diklik lagi
     setMode(null);
     setSelectedSymptoms([]);
     setMessages((prev) => [
@@ -470,10 +472,6 @@ export default function ChatBot() {
     }
   };
 
-  const lastLockedModeSelectId = [...messages]
-    .reverse()
-    .find((m) => m.isModeSelect && disabledMsgIds.has(m.id))?.id;
-
   /* ─── Render ─── */
   return (
     <div className="chatbot-shell" ref={shellRef}>
@@ -526,6 +524,17 @@ export default function ChatBot() {
                 <div
                   className={`bubble ${msg.from}${msg.isError ? " bubble-error" : ""}`}
                 >
+
+                  {/* Back button — di atas konten untuk mode aktif */}
+                  {(msg.isSymptomSelector || msg.isNlpEntry) && (
+                    <button className="back-mode-btn" onClick={() => handleGoBack(msg.id)} disabled={isLocked}>
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="15 18 9 12 15 6" />
+                      </svg>
+                      Ganti cara diagnosis
+                    </button>
+                  )}
+                  
                   {/* Plain text lines */}
                   {msg.text
                     .split("\n")
@@ -613,15 +622,6 @@ export default function ChatBot() {
                         </span>
                       </button>
                     </div>
-                  )}
-
-                  {/* Back button */}
-                  {msg.isModeSelect && isLocked &&
-                   msg.id === lastLockedModeSelectId &&
-                   mode !== null && (
-                    <button className="back-mode-btn" onClick={handleGoBack}>
-                      Ganti cara diagnosis
-                    </button>
                   )}
 
                   {/* Manual symptom selector */}
