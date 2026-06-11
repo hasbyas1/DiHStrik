@@ -672,7 +672,7 @@ export default function ChatBot() {
                         <button
                           className="page-arrow-btn"
                           onClick={() => setSymptomPage(p => Math.max(0, p - 1))}
-                          disabled={symptomPage === 0}
+                          disabled={symptomPage === 0 || isLocked}
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="15 18 9 12 15 6" />
@@ -684,7 +684,7 @@ export default function ChatBot() {
                         <button
                           className="page-arrow-btn"
                           onClick={() => setSymptomPage(p => Math.min(totalPages - 1, p + 1))}
-                          disabled={symptomPage === totalPages - 1}
+                          disabled={symptomPage === totalPages - 1 || isLocked}
                         >
                           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                             <polyline points="9 18 15 12 9 6" />
