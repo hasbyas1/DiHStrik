@@ -238,6 +238,7 @@ export default function ChatBot() {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const autoScroll = useRef(true);
+  const chatMessagesRef = useRef(null);
 
   useEffect(() => {
     if (autoScroll.current) {
@@ -275,6 +276,7 @@ export default function ChatBot() {
       ]);
       setTimeout(() => inputRef.current?.focus(), 150);
     } else {
+      autoScroll.current = false;
       setMessages((prev) => [
         ...prev,
         buildUserMessage("☑️ Pilih gejala sendiri"),
@@ -283,7 +285,23 @@ export default function ChatBot() {
           { isSymptomSelector: true, finalSelection: null }
         ),
       ]);
+      setTimeout(() => {
+        chatMessagesRef.current?.scrollBy({ top: 120, behavior: "smooth" });
+      }, 50);
     }
+  };
+
+  /* ─── Go Back ─── */
+  const handleGoBack = () => {
+    setMode(null);
+    setSelectedSymptoms([]);
+    setMessages((prev) => [
+      ...prev,
+      buildBotMessage(
+        "Tentu! Pilih kembali cara diagnosis yang Anda inginkan:",
+        { isModeSelect: true }
+      ),
+    ]);
   };
 
   /* ─── Manual Checkbox ─── */
@@ -452,6 +470,10 @@ export default function ChatBot() {
     }
   };
 
+  const lastLockedModeSelectId = [...messages]
+    .reverse()
+    .find((m) => m.isModeSelect && disabledMsgIds.has(m.id))?.id;
+
   /* ─── Render ─── */
   return (
     <div className="chatbot-shell" ref={shellRef}>
@@ -486,7 +508,7 @@ export default function ChatBot() {
       </header>
 
       {/* Messages */}
-      <div className="chat-messages" onScroll={handleHoverInactive}>
+      <div className="chat-messages" ref={chatMessagesRef} onScroll={handleHoverInactive}>
         <div className="date-divider">Sesi Analisis Dimulai</div>
 
         {messages.map((msg) => {
@@ -591,6 +613,15 @@ export default function ChatBot() {
                         </span>
                       </button>
                     </div>
+                  )}
+
+                  {/* Back button */}
+                  {msg.isModeSelect && isLocked &&
+                   msg.id === lastLockedModeSelectId &&
+                   mode !== null && (
+                    <button className="back-mode-btn" onClick={handleGoBack}>
+                      Ganti cara diagnosis
+                    </button>
                   )}
 
                   {/* Manual symptom selector */}
