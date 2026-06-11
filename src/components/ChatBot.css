@@ -385,7 +385,7 @@
 .chat-input-area {
   padding: 12px 14px;
   border-top: 1px solid var(--slate-200);
-  background: #fff;
+  background: var(--slate-50);
   display: flex;
   gap: 8px;
   align-items: center;
@@ -419,6 +419,40 @@
 .chat-input:disabled {
   opacity: 0.6;
 }
+
+.chat-input.input-blink {
+  animation: input-attention-light 1.1s ease-in-out infinite;
+}
+
+.dark-theme .chat-input.input-blink {
+  animation: input-attention-dark 1.1s ease-in-out infinite;
+}
+
+@keyframes input-attention-light {
+  0%, 100% {
+    border-color: var(--amber-200);
+    background: var(--slate-50);
+    box-shadow: none;
+  }
+  50% {
+    border-color: var(--amber-500);
+    background: #DBEAFE;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.06);
+  }
+}
+
+@keyframes input-attention-dark {
+  0%, 100% {
+    border-color: var(--amber-200);
+    background: var(--slate-50);
+    box-shadow: none;
+  }
+  50% {
+    border-color: var(--amber-500);
+    background: var(--blue-50);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.28);
+  }
+} 
 
 .send-btn {
   width: 40px;
@@ -496,6 +530,64 @@
   background: var(--slate-100);
   /* Background abu-abu netral */
   border-color: var(--slate-200);
+}
+
+.symptom-items-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.symptom-placeholder {
+  visibility: hidden;
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+/* ─── Symptom Pagination ─── */
+.symptom-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  padding: 4px 2px;
+}
+
+.page-arrow-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1.5px solid var(--blue-200);
+  background: var(--blue-50);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  flex-shrink: 0;
+  color: var(--slate-700);
+}
+
+.page-arrow-btn:hover:not(:disabled) {
+  background: var(--blue-100);
+  border-color: var(--blue-300);
+  box-shadow: 0 2px 6px rgba(59,130,246,0.2);
+  transform: scale(1.08);
+}
+
+.page-arrow-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.page-indicator {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--slate-500);
+  flex: 1;
+  text-align: center;
+  letter-spacing: 0.03em;
 }
 
 /* ─── Theme Toggle Button ─── */
@@ -631,6 +723,41 @@
   cursor: not-allowed;
   transform: none;
   box-shadow: none;
+}
+
+/* ─── Scroll to Bottom Button ─── */
+.scroll-to-bottom-btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: var(--amber-500);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  z-index: 10;
+  white-space: nowrap;
+  transition: bottom 0.2s ease, background 0.15s ease,
+              box-shadow 0.15s ease, transform 0.15s ease;
+  animation: fadeInUp 0.2s ease;
+}
+
+.scroll-to-bottom-btn:hover {
+  background: var(--amber-600);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0);    }
 }
 
 /* ─── Detected Symptoms (NLP tags) ─── */

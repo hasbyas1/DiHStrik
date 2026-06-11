@@ -3,6 +3,7 @@ import { SYMPTOMS, calculateBayesianDiagnosis } from "../data/knowledgeBase";
 import "./ChatBot.css";
 
 const NLP_URL = "http://127.0.0.1:8000";
+const SYMPTOMS_PER_PAGE = 4;
 
 const SYMPTOM_DESCRIPTIONS = {
   "S01": "Terjadi saat saklar utama di meteran (MCB) anjlok/jepret secara tiba-tiba, memutus seluruh aliran listrik rumah.",
@@ -212,6 +213,9 @@ export default function ChatBot() {
   const [nlpInput, setNlpInput] = useState("");
   const [isNlpLoading, setIsNlpLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [symptomPage, setSymptomPage] = useState(0);
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
+  const [isInputHighlighted, setIsInputHighlighted] = useState(false);
 
   const [hoveredData, setHoveredData] = useState(null);
   const [lastHoveredData, setLastHoveredData] = useState(null);
@@ -267,6 +271,7 @@ export default function ChatBot() {
     setMode(selectedMode);
 
     if (selectedMode === "nlp") {
+      setIsInputHighlighted(true);
       setMessages((prev) => [
         ...prev,
         buildUserMessage("💬 Ceritakan masalah Anda"),
@@ -278,6 +283,7 @@ export default function ChatBot() {
       setTimeout(() => inputRef.current?.focus(), 150);
     } else {
       autoScroll.current = false;
+      setSymptomPage(0);
       setMessages((prev) => [
         ...prev,
         buildUserMessage("☑️ Pilih gejala sendiri"),
@@ -297,6 +303,8 @@ export default function ChatBot() {
     lockMsgs([msgId]); // lock pesan ini, jadi hanya bisa sekali klik dan tidak bisa diklik lagi
     setMode(null);
     setSelectedSymptoms([]);
+    setSymptomPage(0);
+    setIsInputHighlighted(false);
     setMessages((prev) => [
       ...prev,
       buildBotMessage(
@@ -368,6 +376,9 @@ export default function ChatBot() {
           { isModeSelect: true }
         ),
       ]);
+      setTimeout(() => {
+        chatMessagesRef.current?.scrollBy({ top: 150, behavior: "smooth" });
+      }, 50);
       setSelectedSymptoms([]);
     }, 1500);
   };
@@ -378,6 +389,7 @@ export default function ChatBot() {
     if (!text || isNlpLoading) return;
 
     setNlpInput("");
+    setIsInputHighlighted(false);
     setMessages((prev) => [...prev, buildUserMessage(text)]);
     setIsNlpLoading(true);
     setIsTyping(true);
@@ -451,6 +463,9 @@ export default function ChatBot() {
           { isModeSelect: true }
         ),
       ]);
+      setTimeout(() => {
+        chatMessagesRef.current?.scrollBy({ top: 150, behavior: "smooth" });
+      }, 50);
     } catch {
       setIsTyping(false);
       setIsNlpLoading(false);
@@ -470,6 +485,14 @@ export default function ChatBot() {
       e.preventDefault();
       handleNlpSend();
     }
+  };
+
+  const handleChatScroll = () => {
+    handleHoverInactive();
+    const el = chatMessagesRef.current;
+    if (!el) return;
+    const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setShowScrollBtn(distFromBottom > 100);
   };
 
   /* ─── Render ─── */
@@ -506,7 +529,7 @@ export default function ChatBot() {
       </header>
 
       {/* Messages */}
-      <div className="chat-messages" ref={chatMessagesRef} onScroll={handleHoverInactive}>
+      <div className="chat-messages" ref={chatMessagesRef} onScroll={handleChatScroll}>
         <div className="date-divider">Sesi Analisis Dimulai</div>
 
         {messages.map((msg) => {
@@ -515,6 +538,11 @@ export default function ChatBot() {
           const currentViewSelection = isLocked
             ? msg.finalSelection || []
             : selectedSymptoms;
+          const totalPages = Math.ceil(SYMPTOMS.length / SYMPTOMS_PER_PAGE);
+          const pageSymptoms = SYMPTOMS.slice(
+            symptomPage * SYMPTOMS_PER_PAGE,
+            (symptomPage + 1) * SYMPTOMS_PER_PAGE
+          );
 
           return (
             <div key={msg.id} className={`msg-row ${msg.from}`}>
@@ -583,18 +611,29 @@ export default function ChatBot() {
                     </div>
                   )}
 
-                  {/* Manual mode simple results */}
+                  {/* Manual mode results — sama seperti NLP: enriched untuk #1, simple untuk sisanya */}
                   {msg.results?.length > 0 && (
                     <div style={{ marginTop: 10 }}>
-                      {msg.results.map((res, idx) => (
-                        <SimpleResultCard
-                          key={res.id}
-                          res={res}
-                          rank={idx + 1}
-                          onHoverActive={handleHoverActive}
-                          onHoverInactive={handleHoverInactive}
-                        />
-                      ))}
+                      <EnrichedDiagnosisCard
+                        result={{
+                          ...msg.results[0],
+                          confidence: msg.results[0].confidence ?? msg.results[0].percentage
+                        }}
+                      />
+                      {msg.results.length > 1 && (
+                        <div style={{ marginTop: 4 }}>
+                          <div className="other-results-label">Kemungkinan lain:</div>
+                          {msg.results.slice(1).map((res, idx) => (
+                            <SimpleResultCard
+                              key={res.id}
+                              res={res}
+                              rank={idx + 2}
+                              onHoverActive={handleHoverActive}
+                              onHoverInactive={handleHoverInactive}
+                            />
+                          ))}
+                        </div>
+                      )}
                     </div>
                   )}
 
@@ -627,32 +666,62 @@ export default function ChatBot() {
                   {/* Manual symptom selector */}
                   {msg.isSymptomSelector && (
                     <div className="options-wrap" style={{ marginTop: "12px" }}>
-                      {SYMPTOMS.map((s) => (
-                        <label
-                          key={s.id}
-                          className={`symptom-label ${isLocked ? "locked" : ""}`}
-                          onMouseEnter={(e) => {
-                            const desc = SYMPTOM_DESCRIPTIONS[s.id];
-                            if (desc) {
-                              handleHoverActive({
-                                explanation: desc,
-                                rect: e.currentTarget.getBoundingClientRect()
-                              });
-                            }
-                          }}
-                          onMouseLeave={handleHoverInactive}
+
+                      {/* Pagination controls */}
+                      <div className="symptom-pagination">
+                        <button
+                          className="page-arrow-btn"
+                          onClick={() => setSymptomPage(p => Math.max(0, p - 1))}
+                          disabled={symptomPage === 0}
                         >
-                          <input
-                            type="checkbox"
-                            checked={currentViewSelection.includes(s.id)}
-                            onChange={() =>
-                              !isLocked && handleToggleSymptom(s.id)
-                            }
-                            disabled={isLocked}
-                          />
-                          <span>{s.text}</span>
-                        </label>
-                      ))}
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="15 18 9 12 15 6" />
+                          </svg>
+                        </button>
+                        <span className="page-indicator">
+                          {symptomPage + 1} / {totalPages}
+                        </span>
+                        <button
+                          className="page-arrow-btn"
+                          onClick={() => setSymptomPage(p => Math.min(totalPages - 1, p + 1))}
+                          disabled={symptomPage === totalPages - 1}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="9 18 15 12 9 6" />
+                          </svg>
+                        </button>
+                      </div>
+
+                      <div className="symptom-items-wrap">
+                        {pageSymptoms.map((s) => (
+                          <label
+                            key={s.id}
+                            className={`symptom-label ${isLocked ? "locked" : ""}`}
+                            onMouseEnter={(e) => {
+                              const desc = SYMPTOM_DESCRIPTIONS[s.id];
+                              if (desc) {
+                                handleHoverActive({
+                                  explanation: desc,
+                                  rect: e.currentTarget.getBoundingClientRect()
+                                });
+                              }
+                            }}
+                            onMouseLeave={handleHoverInactive}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={currentViewSelection.includes(s.id)}
+                              onChange={() => !isLocked && handleToggleSymptom(s.id)}
+                              disabled={isLocked}
+                            />
+                            <span>{s.text}</span>
+                          </label>
+                        ))}
+                        {Array.from({ length: SYMPTOMS_PER_PAGE - pageSymptoms.length }).map((_, i) => (
+                          <div key={`ph-${i}`} className="symptom-label symptom-placeholder" aria-hidden="true" />
+                        ))}
+                      </div>
+
                       {!isLocked && (
                         <button
                           className="opt-btn"
@@ -681,12 +750,28 @@ export default function ChatBot() {
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Scroll to bottom button */}
+      {showScrollBtn && (
+        <button
+          className="scroll-to-bottom-btn"
+          style={{ bottom: mode === "nlp" ? "74px" : "16px" }}
+          onClick={() => {
+            autoScroll.current = false;
+            messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+      )}
+
       {/* NLP Input Bar — only visible in NLP mode */}
       {mode === "nlp" && (
         <div className="chat-input-area">
           <input
             ref={inputRef}
-            className="chat-input"
+            className={`chat-input${isInputHighlighted && !nlpInput ? " input-blink" : ""}`}
             type="text"
             placeholder="Ceritakan masalah listrik Anda..."
             value={nlpInput}
